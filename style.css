@@ -10,14 +10,15 @@ h1 {
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(5, 100px);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 10px;
   justify-content: center;
   margin: 20px auto;
+  max-width: 600px;
 }
 
 .card {
-  width: 100px;
+  width: 100%;
   aspect-ratio: 1 / 1;
   position: relative;
   cursor: pointer;
@@ -34,3 +35,4 @@ h1 {
   backface-visibility: hidden;
   transition: transform 0.6s;
   object-fit: contain;
+}

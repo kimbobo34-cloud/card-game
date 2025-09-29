@@ -81,7 +81,6 @@ h1 {
   background: #555;
 }
 
-/* 모바일 */
 @media (max-width: 600px) {
   .game-board {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -98,7 +97,6 @@ h1 {
   }
 }
 
-/* 큰 화면 */
 @media (min-width: 1600px) {
   .game-board {
     grid-template-columns: repeat(5, 1fr);

@@ -4,80 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>수묵 카드 맞추기 GAME</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root{
-      --gap:12px;
-      --cols:5;
-      --card-border-radius:8px;
-      --max-width:900px;
+    body {
+      font-family: sans-serif;
+      text-align: center;
     }
-    *{box-sizing:border-box}
-    body{font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; margin:24px; display:flex; justify-content:center}
-    .wrapper{width:100%; max-width:var(--max-width)}
-    h1{margin:0 0 12px 0; font-size:20px}
-
-    .game-board{
-      display:grid;
-      grid-template-columns: repeat(var(--cols), 1fr);
-      gap:var(--gap);
+    #timer {
+      font-size: 20px;
+      margin: 10px;
+      font-weight: bold;
     }
-
-    .card{
-      position:relative;
-      width:100%;
-      padding-top:100%; /* square */
-      cursor:pointer;
-      border-radius:var(--card-border-radius);
-      overflow:hidden;
-      box-shadow:0 2px 6px rgba(0,0,0,0.12);
-      transform:translateZ(0);
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(5, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
     }
-
-    /* 두 이미지(뒷면(back)과 앞면(front))를 겹쳐서 넣고, opacity로 전환합니다. */
-    .card img{
-      position:absolute;
-      top:0; left:0; width:100%; height:100%; object-fit:cover;
-      transition:opacity .35s ease, transform .35s ease;
-      display:block;
-      -webkit-user-drag:none;
-      user-select:none;
+    .card {
+      width: 100px;
+      height: 140px;
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
     }
-
-    .card .front{opacity:0; transform:scale(0.98);} /* 기본: 앞면 숨김 */
-    .card .back{opacity:1;}
-
-    .card.flipped .front{opacity:1; transform:scale(1);}
-    .card.flipped .back{opacity:0; transform:scale(0.98);} /* 뒤집히면 뒤 이미지 숨김, 앞 이미지 보임 */
-
-    .card.matched{cursor:default; box-shadow:0 4px 10px rgba(0,0,0,0.18); outline:3px solid rgba(0,0,0,0.06);} /* 매칭된 카드 스타일 */
-
-    /* 반응형: 화면이 작아지면 열 수 줄이기 */
-    @media (max-width:700px){
-      :root{--cols:4}
+    .card img {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      transition: transform 0.6s;
     }
-    @media (max-width:520px){
-      :root{--cols:3}
+    .card .front {
+      transform: rotateY(180deg);
+      opacity: 0;
+    }
+    .card .back {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    .card.flipped .front {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    .card.flipped .back {
+      transform: rotateY(180deg);
+      opacity: 0;
+    }
+    #restartBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+    #restartBtn:hover {
+      background: #555;
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h1>수묵 카드 맞추기 GAME</h1>
-    <div class="game-board" id="gameBoard"></div>
-  </div>
+  <h1>수묵 카드 맞추기 GAME</h1>
+  <div id="timer">남은 시간: 20초</div>
+  <div class="game-board" id="gameBoard"></div>
+  <button id="restartBtn">다시 시작</button>
 
   <script>
     const gameBoard = document.getElementById("gameBoard");
+    const timerDisplay = document.getElementById("timer");
+    const restartBtn = document.getElementById("restartBtn");
 
-    // FRONT 이미지(1~10)들이 img/ 폴더에 있다고 가정
-    const images = [];
+    let images = [];
     for (let i = 1; i <= 10; i++) {
       images.push(`img/${i}.jpg`);
       images.push(`img/${i}.jpg`);
     }
-
-    // 뒤집혀 있을 때 보일 BACK 이미지 경로
-    const backSrc = 'img/back.png';
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -87,32 +96,42 @@
       return array;
     }
 
-    const shuffled = shuffle([...images]);
-
-    // 카드 생성
-    shuffled.forEach(src => {
-      const card = document.createElement('div');
-      card.classList.add('card');
-      card.dataset.image = src; // 비교용
-
-      card.innerHTML = `
-        <img class="back" src="${backSrc}" alt="card back">
-        <img class="front" src="${src}" alt="card front">
-      `;
-
-      card.addEventListener('click', () => flipCard(card));
-      gameBoard.appendChild(card);
-    });
-
     let flippedCards = [];
     let lockBoard = false;
+    let countdown;
+    let timeLeft = 20;
+
+    function initGame() {
+      gameBoard.innerHTML = "";
+      flippedCards = [];
+      lockBoard = false;
+      timeLeft = 20;
+      timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
+      restartBtn.style.display = "none";
+
+      let shuffled = shuffle([...images]);
+
+      shuffled.forEach(src => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.dataset.image = src;
+
+        card.innerHTML = `
+          <img class="front" src="${src}" alt="front">
+          <img class="back" src="img/back.png" alt="back">
+        `;
+
+        card.addEventListener("click", () => flipCard(card));
+        gameBoard.appendChild(card);
+      });
+
+      startTimer();
+    }
 
     function flipCard(card) {
-      if (lockBoard) return;
-      if (card.classList.contains('flipped')) return; // 이미 뒤집힌 카드 클릭 무시
-      if (card.classList.contains('matched')) return; // 이미 매칭된 카드 무시
+      if (lockBoard || card.classList.contains("flipped")) return;
 
-      card.classList.add('flipped');
+      card.classList.add("flipped");
       flippedCards.push(card);
 
       if (flippedCards.length === 2) {
@@ -123,30 +142,40 @@
     function checkMatch() {
       lockBoard = true;
       const [card1, card2] = flippedCards;
-
       if (card1.dataset.image === card2.dataset.image) {
-        // 매칭 성공
-        card1.classList.add('matched');
-        card2.classList.add('matched');
         flippedCards = [];
         lockBoard = false;
       } else {
-        // 매칭 실패: 잠시 보여주고 다시 뒤집기
         setTimeout(() => {
-          card1.classList.remove('flipped');
-          card2.classList.remove('flipped');
+          card1.classList.remove("flipped");
+          card2.classList.remove("flipped");
           flippedCards = [];
           lockBoard = false;
-        }, 1000);
+        }, 800);
       }
     }
 
-    // (선택) 모든 이미지를 미리 로드하면 첫 클릭 시 깜박임을 줄일 수 있습니다.
-    function preloadAll() {
-      const urls = [backSrc, ...new Set(images)];
-      urls.forEach(u => { const i = new Image(); i.src = u; });
+    function startTimer() {
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          endGame();
+        }
+      }, 1000);
     }
-    preloadAll();
+
+    function endGame() {
+      lockBoard = true;
+      timerDisplay.textContent = "시간 초과! 게임이 종료되었습니다.";
+      restartBtn.style.display = "inline-block";
+    }
+
+    restartBtn.addEventListener("click", initGame);
+
+    initGame();
   </script>
 </body>
 </html>

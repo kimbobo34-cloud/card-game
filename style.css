@@ -16,14 +16,12 @@ body {
   margin: 0 auto;
 }
 
-/* 세로 모드: 4열 × 5행 */
 @media (orientation: portrait) {
   .game-board {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* 가로 모드: 5열 × 4행 */
 @media (orientation: landscape) {
   .game-board {
     grid-template-columns: repeat(5, 1fr);

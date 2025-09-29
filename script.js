@@ -8,6 +8,7 @@ const cardsArray = [
   { img: "8.jpg" },
   { img: "10.jpg" },
   { img: "11.jpg" },
+  { img: "12.jpg" },
 ];
 
 const gameBoard = document.querySelector('.game-board');

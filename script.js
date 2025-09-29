@@ -40,8 +40,8 @@ function initGame() {
 
     card.innerHTML = `
       <div class="card-inner">
-        <div class="front"><img src="${src}" alt="front"></div>
         <div class="back"><img src="img/back.png" alt="back"></div>
+        <div class="front"><img src="${src}" alt="front"></div>
       </div>
     `;
 
@@ -99,5 +99,4 @@ function endGame() {
 
 restartBtn.addEventListener("click", initGame);
 
-// 초기 게임 시작
 initGame();

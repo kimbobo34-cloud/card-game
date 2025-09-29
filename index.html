@@ -1,80 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>수묵 카드 맞추기 GAME</title>
+  <title>Memory Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="game-board" id="gameBoard"></div>
-
-  <script>
-    const gameBoard = document.getElementById("gameBoard");
-
-    const images = [];
-    for (let i = 1; i <= 10; i++) {
-      images.push(`img/${i}.jpg`);
-      images.push(`img/${i}.jpg`);
-    }
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
-    let shuffled = shuffle([...images]);
-
-    shuffled.forEach(src => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.dataset.image = src;
-
-      card.innerHTML = `
-        <img src="${src}" alt="card image" style="display: none;">
-      `;
-
-      card.addEventListener("click", () => flipCard(card));
-      gameBoard.appendChild(card);
-    });
-
-    let flippedCards = [];
-    let lockBoard = false;
-
-    function flipCard(card) {
-      if (lockBoard || card.classList.contains("flipped")) return;
-
-      const img = card.querySelector("img");
-      card.classList.add("flipped");
-      img.style.display = "block";
-
-      flippedCards.push(card);
-
-      if (flippedCards.length === 2) {
-        checkMatch();
-      }
-    }
-
-    function checkMatch() {
-      lockBoard = true;
-      const [card1, card2] = flippedCards;
-      if (card1.dataset.image === card2.dataset.image) {
-        flippedCards = [];
-        lockBoard = false;
-      } else {
-        setTimeout(() => {
-          card1.classList.remove("flipped");
-          card2.classList.remove("flipped");
-          card1.querySelector("img").style.display = "none";
-          card2.querySelector("img").style.display = "none";
-          flippedCards = [];
-          lockBoard = false;
-        }, 1000);
-      }
-    }
-  </script>
+  <h1>🎴 Memory Game</h1>
+  <div class="game-board"></div>
+  <script src="script.js"></script>
 </body>
 </html>

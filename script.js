@@ -14,6 +14,7 @@ for (let i = 1; i <= 10; i++) {
 
 let flippedCards = [];
 let lockBoard = false;
+let matchedSets = 0;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -27,6 +28,7 @@ function initGame() {
   gameBoard.innerHTML = "";
   flippedCards = [];
   lockBoard = false;
+  matchedSets = 0;
   timeLeft = totalTime;
   timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
   restartBtn.style.display = "none";
@@ -67,6 +69,7 @@ function checkMatch() {
   lockBoard = true;
   const [card1, card2] = flippedCards;
   if (card1.dataset.image === card2.dataset.image) {
+    matchedSets++;
     flippedCards = [];
     lockBoard = false;
   } else {
@@ -93,7 +96,7 @@ function startTimer() {
 
 function endGame() {
   lockBoard = true;
-  timerDisplay.textContent = "시간 초과! 게임이 종료되었습니다.";
+  timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
   restartBtn.style.display = "inline-block";
 }
 

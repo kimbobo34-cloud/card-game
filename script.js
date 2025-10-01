@@ -30,7 +30,7 @@ function initGame() {
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
+  timerDisplay.textContent = "미리보기 3초";
   restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
@@ -58,26 +58,16 @@ function initGame() {
 
     setTimeout(() => {
       allCards.forEach(card => card.classList.remove("flipped"));
-      showStartMessage();
+      showStartMessage(); 
     }, 3000);
 
   }, 100);
 }
 
 function showStartMessage() {
-  const startMsg = document.createElement("div");
-  startMsg.id = "startMsg";
-  startMsg.textContent = "START!";
-  startMsg.style.fontSize = "48px";
-  startMsg.style.fontWeight = "bold";
-  startMsg.style.margin = "20px";
-  document.body.insertBefore(startMsg, gameBoard);
-
-  setTimeout(() => {
-    startMsg.remove();
-    lockBoard = false;
-    startTimer(); 
-  }, 1000);
+  timerDisplay.textContent = "START!";
+  lockBoard = false;
+  startTimer();
 }
 
 function flipCard(card) {

@@ -6,7 +6,6 @@ const totalTime = 20;
 let countdown;
 let timeLeft = totalTime;
 
-// 카드 8장 (1~8)
 const images = [];
 for (let i = 1; i <= 8; i++) {
   images.push(`img/${i}.jpg`);
@@ -28,7 +27,7 @@ function shuffle(array) {
 function initGame() {
   gameBoard.innerHTML = "";
   flippedCards = [];
-  lockBoard = true; // 처음 클릭 금지
+  lockBoard = true; 
   matchedSets = 0;
   timeLeft = totalTime;
   timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
@@ -52,15 +51,30 @@ function initGame() {
     gameBoard.appendChild(card);
   });
 
-  // 3초 동안 전체 앞면 공개
   const allCards = document.querySelectorAll(".card");
-  allCards.forEach(card => card.classList.add("flipped")); // 앞면 보이기
+
+  allCards.forEach(card => card.classList.add("flipped"));
 
   setTimeout(() => {
-    allCards.forEach(card => card.classList.remove("flipped")); // 뒤집기
-    lockBoard = false; // 클릭 허용
-    startTimer();      // 타이머 시작
+    allCards.forEach(card => card.classList.remove("flipped")); 
+    showStartMessage(); 
   }, 3000);
+}
+
+function showStartMessage() {
+  const startMsg = document.createElement("div");
+  startMsg.id = "startMsg";
+  startMsg.textContent = "START!";
+  startMsg.style.fontSize = "48px";
+  startMsg.style.fontWeight = "bold";
+  startMsg.style.margin = "20px";
+  document.body.insertBefore(startMsg, gameBoard);
+
+  setTimeout(() => {
+    startMsg.remove(); 
+    lockBoard = false;  
+    startTimer();       
+  }, 1000); 
 }
 
 function flipCard(card) {

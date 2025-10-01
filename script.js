@@ -27,7 +27,7 @@ function shuffle(array) {
 function initGame() {
   gameBoard.innerHTML = "";
   flippedCards = [];
-  lockBoard = true; 
+  lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
   timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
@@ -53,12 +53,15 @@ function initGame() {
 
   const allCards = document.querySelectorAll(".card");
 
-  allCards.forEach(card => card.classList.add("flipped"));
-
   setTimeout(() => {
-    allCards.forEach(card => card.classList.remove("flipped")); 
-    showStartMessage(); 
-  }, 3000);
+    allCards.forEach(card => card.classList.add("flipped"));
+
+    setTimeout(() => {
+      allCards.forEach(card => card.classList.remove("flipped"));
+      showStartMessage();
+    }, 3000);
+
+  }, 100);
 }
 
 function showStartMessage() {
@@ -71,10 +74,10 @@ function showStartMessage() {
   document.body.insertBefore(startMsg, gameBoard);
 
   setTimeout(() => {
-    startMsg.remove(); 
-    lockBoard = false;  
-    startTimer();       
-  }, 1000); 
+    startMsg.remove();
+    lockBoard = false;
+    startTimer(); 
+  }, 1000);
 }
 
 function flipCard(card) {

@@ -5,16 +5,15 @@ const restartBtn = document.getElementById("restartBtn");
 const totalTime = 20;
 let countdown;
 let timeLeft = totalTime;
+let flippedCards = [];
+let lockBoard = false;
+let matchedSets = 0;
 
 const images = [];
 for (let i = 1; i <= 8; i++) {
   images.push(`img/${i}.jpg`);
   images.push(`img/${i}.jpg`);
 }
-
-let flippedCards = [];
-let lockBoard = false;
-let matchedSets = 0;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -25,12 +24,14 @@ function shuffle(array) {
 }
 
 function initGame() {
+  clearInterval(countdown);
   gameBoard.innerHTML = "";
   flippedCards = [];
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  restartBtn.style.display = "none";
+  restartBtn.textContent = "🔄 다시 시작";
+  restartBtn.style.display = "inline-block";
 
   const shuffled = shuffle([...images]);
 
@@ -76,13 +77,12 @@ function startPreviewCountdown(allCards) {
 
 function showStartMessage() {
   timerDisplay.textContent = "START!";
-  lockBoard = false; 
-  startTimer();     
+  lockBoard = false;
+  startTimer();
 }
 
 function flipCard(card) {
   if (lockBoard || card.classList.contains("flipped")) return;
-
   card.classList.add("flipped");
   flippedCards.push(card);
 
@@ -94,6 +94,7 @@ function flipCard(card) {
 function checkMatch() {
   lockBoard = true;
   const [card1, card2] = flippedCards;
+
   if (card1.dataset.image === card2.dataset.image) {
     matchedSets++;
     flippedCards = [];
@@ -124,7 +125,6 @@ function startTimer() {
 function endGame() {
   lockBoard = true;
   timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
-  restartBtn.style.display = "inline-block";
 }
 
 restartBtn.addEventListener("click", initGame);

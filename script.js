@@ -1,6 +1,7 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
+const startOverlay = document.getElementById("startOverlay");
 
 let images = [];
 let flippedCards = [];
@@ -13,7 +14,6 @@ let lockBoard = false;
 function createBoard() {
   gameBoard.innerHTML = "";
   images = [];
-
   for (let i = 1; i <= 8; i++) {
     images.push(`img/${i}.jpg`);
     images.push(`img/${i}.jpg`);
@@ -46,15 +46,12 @@ function flipCard(card) {
   card.classList.add("flipped");
   flippedCards.push(card);
 
-  if (flippedCards.length === 2) {
-    checkMatch();
-  }
+  if (flippedCards.length === 2) checkMatch();
 }
 
 function checkMatch() {
   lockBoard = true;
   const [card1, card2] = flippedCards;
-
   const img1 = card1.querySelector(".front img").src;
   const img2 = card2.querySelector(".front img").src;
 
@@ -72,7 +69,6 @@ function checkMatch() {
   }
 }
 
-// 미리보기 + 게임 시작
 function startGame() {
   matchedCount = 0;
   timeLeft = 20;
@@ -92,26 +88,25 @@ function startGame() {
     } else {
       clearInterval(previewTimer);
       hideAllCards();
-      timerDisplay.textContent = "START!";
+
+      startOverlay.style.display = "block";
       setTimeout(() => {
-        lockBoard = false; // 게임 진행 가능
+        startOverlay.style.display = "none";
+        lockBoard = false;
         startMainTimer();
-      }, 500);
+      }, 1000);
     }
   }, 1000);
 }
 
-// 모든 카드 앞면
 function showAllCards() {
   document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
 }
 
-// 모든 카드 뒷면
 function hideAllCards() {
   document.querySelectorAll(".card").forEach(card => card.classList.remove("flipped"));
 }
 
-// 게임 타이머
 function startMainTimer() {
   countdown = setInterval(() => {
     if (timeLeft >= 0) {

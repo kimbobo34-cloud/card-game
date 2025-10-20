@@ -95,10 +95,11 @@ function startGame() {
     } else {
       clearInterval(previewTimer);
 
-      startOverlay.style.display = "block"; // START 오버레이
+      hideAllCards();
+
+      startOverlay.style.display = "block";
       setTimeout(() => {
         startOverlay.style.display = "none";
-        hideAllCards(); 
         lockBoard = false;
         startMainTimer();
       }, 1000);

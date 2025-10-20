@@ -2,7 +2,7 @@ const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
 
-const totalTime = 20; 
+const totalTime = 20;
 let countdown;
 let timeLeft = totalTime;
 
@@ -30,7 +30,6 @@ function initGame() {
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  timerDisplay.textContent = "미리보기 3초";
   restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
@@ -55,19 +54,30 @@ function initGame() {
 
   setTimeout(() => {
     allCards.forEach(card => card.classList.add("flipped"));
-
-    setTimeout(() => {
-      allCards.forEach(card => card.classList.remove("flipped"));
-      showStartMessage(); 
-    }, 3000);
-
+    startPreviewCountdown(allCards);
   }, 100);
+}
+
+function startPreviewCountdown(allCards) {
+  let previewTime = 3;
+  timerDisplay.textContent = `미리보기 ${previewTime}초`;
+
+  const previewInterval = setInterval(() => {
+    previewTime--;
+    if (previewTime > 0) {
+      timerDisplay.textContent = `미리보기 ${previewTime}초`;
+    } else {
+      clearInterval(previewInterval);
+      allCards.forEach(card => card.classList.remove("flipped"));
+      showStartMessage();
+    }
+  }, 1000);
 }
 
 function showStartMessage() {
   timerDisplay.textContent = "START!";
-  lockBoard = false;
-  startTimer();
+  lockBoard = false; 
+  startTimer();     
 }
 
 function flipCard(card) {
@@ -100,6 +110,7 @@ function checkMatch() {
 
 function startTimer() {
   clearInterval(countdown);
+  timeLeft = totalTime;
   countdown = setInterval(() => {
     timeLeft--;
     timerDisplay.textContent = `남은 시간: ${timeLeft}초`;

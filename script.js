@@ -1,125 +1,117 @@
-const gameBoard = document.getElementById("gameBoard");
-const timerDisplay = document.getElementById("timer");
-const startBtn = document.getElementById("startBtn");
-const restartBtn = document.getElementById("restartBtn");
-
-const totalTime = 20;
-let countdown;
-let timeLeft = totalTime;
-
-const images = [];
-for (let i = 1; i <= 8; i++) {
-  images.push(`img/${i}.jpg`);
-  images.push(`img/${i}.jpg`);
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-let flippedCards = [];
-let lockBoard = false;
-let matchedSets = 0;
-
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+h1 {
+  margin-top: 20px;
+  font-size: 2rem;
+  text-align: center;
 }
 
-function createCards() {
-  gameBoard.innerHTML = "";
-  flippedCards = [];
-  lockBoard = true;
-  matchedSets = 0;
-  timeLeft = totalTime;
-
-  const shuffled = shuffle([...images]);
-  shuffled.forEach(src => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.image = src;
-
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="back"><img src="img/back.png" alt="back"></div>
-        <div class="front"><img src="${src}" alt="front"></div>
-      </div>
-    `;
-    card.addEventListener("click", () => flipCard(card));
-    gameBoard.appendChild(card);
-  });
+#timer {
+  font-size: 1.3rem;
+  margin: 10px 0;
+  text-align: center;
+  min-height: 24px;
 }
 
-function flipCard(card) {
-  if (lockBoard || card.classList.contains("flipped")) return;
-  card.classList.add("flipped");
-  flippedCards.push(card);
-
-  if (flippedCards.length === 2) checkMatch();
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  width: 90%;
+  max-width: 700px;
+  perspective: 1000px;
+  margin-top: 20px;
 }
 
-function checkMatch() {
-  lockBoard = true;
-  const [card1, card2] = flippedCards;
-  if (card1.dataset.image === card2.dataset.image) {
-    matchedSets++;
-    flippedCards = [];
-    lockBoard = false;
-  } else {
-    setTimeout(() => {
-      card1.classList.remove("flipped");
-      card2.classList.remove("flipped");
-      flippedCards = [];
-      lockBoard = false;
-    }, 800);
-  }
+.card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  cursor: pointer;
 }
 
-function previewCards() {
-  const allCards = document.querySelectorAll(".card");
-  allCards.forEach(card => card.classList.add("flipped"));
-  let previewTime = 3;
-  timerDisplay.textContent = `미리보기 ${previewTime}초`;
-
-  const previewInterval = setInterval(() => {
-    previewTime--;
-    if (previewTime > 0) {
-      timerDisplay.textContent = `미리보기 ${previewTime}초`;
-    } else {
-      clearInterval(previewInterval);
-      allCards.forEach(card => card.classList.remove("flipped"));
-      startBtn.style.display = "none";
-      lockBoard = false;
-      startTimer();
-    }
-  }, 1000);
+.card .card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
 }
 
-function startTimer() {
-  clearInterval(countdown);
-  timeLeft = totalTime;
-  countdown = setInterval(() => {
-    timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
-    timeLeft--;
-    if (timeLeft < 0) {
-      clearInterval(countdown);
-      endGame();
-    }
-  }, 1000);
+.card .front,
+.card .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  overflow: hidden;
 }
 
-function endGame() {
-  lockBoard = true;
-  timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
-  restartBtn.style.display = "inline-block";
+.card .front img,
+.card .back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-startBtn.addEventListener("click", () => {
-  createCards();
-  previewCards();
-});
+.card .back {
+  transform: rotateY(0deg);
+}
 
-restartBtn.addEventListener("click", () => {
-  restartBtn.style.display = "none";
-  createCards();
-  startBtn.style.display = "block";
-});
+.card .front {
+  transform: rotateY(180deg);
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+#startBtn {
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 40px;
+  font-size: 2rem;
+  font-weight: 700;
+  border-radius: 30px;
+  border: none;
+  background-color: #ff4d4d;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#restartBtn {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  border: none;
+  background-color: #0078ff;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+#restartBtn:hover {
+  background-color: #005fcc;
+  transform: scale(1.05);
+}

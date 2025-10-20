@@ -1,59 +1,19 @@
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-  padding: 20px;
-  min-height: 100vh;
+  font-family: sans-serif;
   text-align: center;
+  background: #f0f0f0;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
   margin: 20px 0;
-  font-size: 2rem;
 }
 
 #timer {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 24px;
   margin: 10px 0;
-  min-height: 24px;
-}
-
-#startBtn {
-  padding: 10px 25px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border-radius: 20px;
-  border: none;
-  background-color: #ff4d4d;
-  color: #fff;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-#restartBtn {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 25px;
-  border: none;
-  background-color: #0078ff;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  display: none;
-}
-
-#restartBtn:hover {
-  background-color: #005fcc;
-  transform: scale(1.05);
+  font-weight: bold;
 }
 
 .game-board {
@@ -105,30 +65,50 @@ h1 {
   border-radius: 8px;
 }
 
-/* 모바일 */
+#restartBtn {
+  display: none;
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+#restartBtn:hover {
+  background: #555;
+}
+
 @media (max-width: 600px) {
   .game-board {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 10px;
   }
 
   #timer {
-    font-size: 1.3rem;
-  }
-
-  #startBtn {
-    font-size: 1rem;
-    padding: 8px 20px;
+    font-size: 20px;
   }
 
   #restartBtn {
-    font-size: 0.9rem;
-    padding: 8px 20px;
+    font-size: 16px;
+    padding: 10px 20px;
   }
 }
 
 @media (min-width: 1600px) {
   .game-board {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1600px;
+  }
+
+  #timer {
+    font-size: 28px;
+  }
+
+  #restartBtn {
+    font-size: 20px;
+    padding: 14px 28px;
   }
 }

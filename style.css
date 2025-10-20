@@ -1,50 +1,66 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   background-color: #fff;
-  color: #222;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  margin: 0;
+  padding: 20px;
 }
 
 h1 {
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 2rem;
   text-align: center;
-  letter-spacing: 1px;
 }
 
 #timer {
   font-size: 1.2rem;
-  margin-top: 8px;
-  height: 24px;
+  font-weight: 600;
+  margin: 15px 0;
+  text-align: center;
+}
+
+#startOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ff0000;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 10;
 }
 
 #restartBtn {
-  margin-top: 12px;
-  background-color: #000;
-  color: #fff;
+  margin-top: 20px;
+  background-color: #0078ff;
+  color: white;
   border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+  border-radius: 25px;
+  padding: 12px 28px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: background-color 0.2s, transform 0.2s;
 }
+
 #restartBtn:hover {
-  background-color: #333;
+  background-color: #005fcc;
+  transform: scale(1.05);
 }
 
 .game-board {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 10px;
+  gap: 12px;
   max-width: 600px;
   width: 90%;
-  margin: 30px auto;
+  margin: 20px auto;
   perspective: 1000px;
 }
 
@@ -65,7 +81,7 @@ h1 {
   border-radius: 10px;
   backface-visibility: hidden;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 
 .card .front img {
@@ -85,33 +101,4 @@ h1 {
 
 .card.flipped {
   transform: rotateY(180deg);
-}
-
-@media (min-width: 768px) {
-  h1 {
-    font-size: 2.4rem;
-  }
-  #timer {
-    font-size: 1.3rem;
-  }
-  #restartBtn {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-  }
-  .game-board {
-    max-width: 700px;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-  #timer {
-    font-size: 1rem;
-  }
-  .game-board {
-    gap: 8px;
-  }
 }

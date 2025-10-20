@@ -14,6 +14,7 @@ let lockBoard = false;
 function createBoard() {
   gameBoard.innerHTML = "";
   images = [];
+
   for (let i = 1; i <= 8; i++) {
     images.push(`img/${i}.jpg`);
     images.push(`img/${i}.jpg`);
@@ -69,6 +70,14 @@ function checkMatch() {
   }
 }
 
+function showAllCards() {
+  document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
+}
+
+function hideAllCards() {
+  document.querySelectorAll(".card").forEach(card => card.classList.remove("flipped"));
+}
+
 function startGame() {
   matchedCount = 0;
   timeLeft = 20;
@@ -76,6 +85,7 @@ function startGame() {
   lockBoard = true;
 
   hideAllCards();
+  startOverlay.style.display = "none";
 
   let previewCount = 3;
   showAllCards();
@@ -88,7 +98,6 @@ function startGame() {
     } else {
       clearInterval(previewTimer);
       hideAllCards();
-
       startOverlay.style.display = "block";
       setTimeout(() => {
         startOverlay.style.display = "none";
@@ -97,14 +106,6 @@ function startGame() {
       }, 1000);
     }
   }, 1000);
-}
-
-function showAllCards() {
-  document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
-}
-
-function hideAllCards() {
-  document.querySelectorAll(".card").forEach(card => card.classList.remove("flipped"));
 }
 
 function startMainTimer() {

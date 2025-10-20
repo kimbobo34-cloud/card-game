@@ -59,7 +59,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 12px;
-  max-width: 600px;
+  max-width: calc(6 * 100px + 5 * 12px); /* 한 줄 최대 6장 */
   width: 90%;
   margin: 20px auto;
   perspective: 1000px;
@@ -68,7 +68,7 @@ h1 {
 .card {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* 1:1 비율 */
+  aspect-ratio: 1 / 1;
   transform-style: preserve-3d;
   transition: transform 0.6s;
   cursor: pointer;
@@ -105,30 +105,14 @@ h1 {
 }
 
 @media (min-width: 768px) {
-  h1 {
-    font-size: 2.4rem;
-  }
-  #timer {
-    font-size: 1.3rem;
-  }
-  #restartBtn {
-    font-size: 1.1rem;
-    padding: 14px 30px;
-  }
-  .game-board {
-    max-width: 700px;
-    gap: 14px;
-  }
+  h1 { font-size: 2.4rem; }
+  #timer { font-size: 1.3rem; }
+  #restartBtn { font-size: 1.1rem; padding: 14px 30px; }
+  .game-board { max-width: calc(6 * 120px + 5 * 12px); gap: 14px; }
 }
 
 @media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-  #timer {
-    font-size: 1rem;
-  }
-  .game-board {
-    gap: 8px;
-  }
+  h1 { font-size: 1.5rem; }
+  #timer { font-size: 1rem; }
+  .game-board { gap: 8px; }
 }

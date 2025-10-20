@@ -7,79 +7,22 @@ body {
   margin: 0;
   padding: 20px;
   min-height: 100vh;
+  text-align: center;
 }
 
 h1 {
-  margin-top: 20px;
+  margin: 20px 0;
   font-size: 2rem;
-  text-align: center;
 }
 
 #timer {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  font-weight: bold;
   margin: 10px 0;
-  text-align: center;
   min-height: 24px;
 }
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 10px;
-  width: 90%;
-  max-width: 700px;
-  perspective: 1000px;
-  margin-top: 20px;
-}
-
-.card {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.6s;
-  cursor: pointer;
-}
-
-.card .card-inner {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.6s;
-}
-
-.card .front,
-.card .back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  backface-visibility: hidden;
-  overflow: hidden;
-}
-
-.card .front img,
-.card .back img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.card .back {
-  transform: rotateY(0deg);
-}
-
-.card .front {
-  transform: rotateY(180deg);
-}
-
-.card.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-
 #startBtn {
-  margin-top: 10px;
   padding: 10px 25px;
   font-size: 1.2rem;
   font-weight: 700;
@@ -88,7 +31,7 @@ h1 {
   background-color: #ff4d4d;
   color: #fff;
   cursor: pointer;
-  z-index: 10;
+  margin-bottom: 10px;
 }
 
 #restartBtn {
@@ -105,7 +48,7 @@ h1 {
   color: #fff;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transition: background-color 0.2s, transform 0.2s;
+  display: none;
 }
 
 #restartBtn:hover {
@@ -113,13 +56,79 @@ h1 {
   transform: scale(1.05);
 }
 
-@media (max-width: 480px) {
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  justify-content: center;
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 0 10px;
+}
+
+.card {
+  width: 100%;
+  aspect-ratio: 1/1;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card .front,
+.card .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card .front {
+  transform: rotateY(180deg);
+}
+
+.card .front img,
+.card .back img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* 모바일 */
+@media (max-width: 600px) {
   .game-board {
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 10px;
   }
+
+  #timer {
+    font-size: 1.3rem;
+  }
+
   #startBtn {
     font-size: 1rem;
     padding: 8px 20px;
+  }
+
+  #restartBtn {
+    font-size: 0.9rem;
+    padding: 8px 20px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .game-board {
+    grid-template-columns: repeat(6, 1fr);
   }
 }

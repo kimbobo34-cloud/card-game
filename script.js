@@ -57,7 +57,7 @@ function startPreview(allCards) {
   let previewTime = 3;
   timerDisplay.textContent = `미리보기 ${previewTime}초`;
 
-  allCards.forEach(card => card.classList.add("flipped")); // 앞면 공개
+  allCards.forEach(card => card.classList.add("flipped"));
 
   const previewInterval = setInterval(() => {
     previewTime--;
@@ -65,7 +65,7 @@ function startPreview(allCards) {
       timerDisplay.textContent = `미리보기 ${previewTime}초`;
     } else {
       clearInterval(previewInterval);
-      allCards.forEach(card => card.classList.remove("flipped")); // 다시 뒤집기
+      allCards.forEach(card => card.classList.remove("flipped"));
       showStartMessage();
     }
   }, 1000);

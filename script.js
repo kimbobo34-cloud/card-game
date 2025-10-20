@@ -16,6 +16,20 @@ let flippedCards = [];
 let lockBoard = false;
 let matchedSets = 0;
 
+const startOverlay = document.createElement("div");
+startOverlay.id = "startOverlay";
+startOverlay.style.position = "absolute";
+startOverlay.style.top = "50%";
+startOverlay.style.left = "50%";
+startOverlay.style.transform = "translate(-50%, -50%)";
+startOverlay.style.fontSize = "3rem";
+startOverlay.style.fontWeight = "bold";
+startOverlay.style.color = "#333";
+startOverlay.style.zIndex = "100";
+startOverlay.style.display = "none";
+startOverlay.textContent = "START!";
+document.body.appendChild(startOverlay);
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -30,7 +44,6 @@ function initGame() {
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  timerDisplay.textContent = "미리보기 3초";
   restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
@@ -53,16 +66,9 @@ function initGame() {
 
   const allCards = document.querySelectorAll(".card");
 
-  setTimeout(() => {
-    allCards.forEach(card => card.classList.add("flipped")); // 전체 앞면 공개
-    startPreviewCountdown(allCards);
-  }, 100);
-}
-
-function startPreviewCountdown(allCards) {
   let previewTime = 3;
   timerDisplay.textContent = `미리보기 ${previewTime}초`;
-
+  
   const previewInterval = setInterval(() => {
     previewTime--;
     if (previewTime > 0) {
@@ -70,29 +76,22 @@ function startPreviewCountdown(allCards) {
     } else {
       clearInterval(previewInterval);
       allCards.forEach(card => card.classList.remove("flipped"));
-
-      showStartMessage();
+      showStartOverlay();
     }
   }, 1000);
-}
-
-function showStartMessage() {
-  const startMessage = document.createElement("div");
-  startMessage.textContent = "START!";
-  startMessage.style.position = "absolute";
-  startMessage.style.top = "50%";
-  startMessage.style.left = "50%";
-  startMessage.style.transform = "translate(-50%, -50%)";
-  startMessage.style.fontSize = "4rem";
-  startMessage.style.fontWeight = "bold";
-  startMessage.style.color = "#333";
-  startMessage.style.zIndex = "1000";
-  document.body.appendChild(startMessage);
 
   setTimeout(() => {
-    document.body.removeChild(startMessage);
-    lockBoard = false;  // 클릭 허용
-    startTimer();       // 타이머 시작
+    allCards.forEach(card => card.classList.add("flipped"));
+  }, 100);
+}
+
+function showStartOverlay() {
+  startOverlay.style.display = "block";
+  lockBoard = false;
+  startTimer();
+
+  setTimeout(() => {
+    startOverlay.style.display = "none";
   }, 1000);
 }
 

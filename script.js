@@ -1,14 +1,16 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
-const startOverlay = document.getElementById("startOverlay");
+const startOverlay = document.createElement("div");
+startOverlay.id = "startOverlay";
+startOverlay.textContent = "START!";
+document.body.appendChild(startOverlay);
 
 let images = [];
 let flippedCards = [];
 let matchedCount = 0;
 let timeLeft = 20;
 let countdown;
-let previewTimer;
 let lockBoard = false;
 
 function createBoard() {
@@ -85,16 +87,17 @@ function startGame() {
   hideAllCards();
   startOverlay.style.display = "none";
 
-  let previewCount = 3;
+  showAllCards();
+  let previewSeconds = 3;
+  timerDisplay.textContent = `미리보기 ${previewSeconds}초`;
 
-  previewTimer = setInterval(() => {
-    if (previewCount > 0) {
-      showAllCards();
-      timerDisplay.textContent = `미리보기 ${previewCount}초`;
-      previewCount--;
+  const previewInterval = setInterval(() => {
+    previewSeconds--;
+    if (previewSeconds > 0) {
+      timerDisplay.textContent = `미리보기 ${previewSeconds}초`;
     } else {
-      clearInterval(previewTimer);
-
+      clearInterval(previewInterval);
+      
       hideAllCards();
 
       startOverlay.style.display = "block";
@@ -126,7 +129,6 @@ function endGame() {
 
 restartBtn.addEventListener("click", () => {
   clearInterval(countdown);
-  clearInterval(previewTimer);
   createBoard();
   startGame();
 });

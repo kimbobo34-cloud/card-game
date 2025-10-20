@@ -1,9 +1,8 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
-const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 
-const totalTime = 20;
+const totalTime = 20; 
 let countdown;
 let timeLeft = totalTime;
 
@@ -31,9 +30,8 @@ function initGame() {
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  timerDisplay.textContent = "";
-  restartBtn.style.display = "inline-block";
-  startBtn.style.display = "inline-block";
+  timerDisplay.textContent = "미리보기 3초";
+  restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
 
@@ -48,16 +46,22 @@ function initGame() {
         <div class="front"><img src="${src}" alt="front"></div>
       </div>
     `;
+
     card.addEventListener("click", () => flipCard(card));
     gameBoard.appendChild(card);
   });
+
+  const allCards = document.querySelectorAll(".card");
+
+  setTimeout(() => {
+    allCards.forEach(card => card.classList.add("flipped")); // 전체 앞면 공개
+    startPreviewCountdown(allCards);
+  }, 100);
 }
 
-function startPreview(allCards) {
+function startPreviewCountdown(allCards) {
   let previewTime = 3;
   timerDisplay.textContent = `미리보기 ${previewTime}초`;
-
-  allCards.forEach(card => card.classList.add("flipped"));
 
   const previewInterval = setInterval(() => {
     previewTime--;
@@ -66,6 +70,7 @@ function startPreview(allCards) {
     } else {
       clearInterval(previewInterval);
       allCards.forEach(card => card.classList.remove("flipped"));
+
       showStartMessage();
     }
   }, 1000);
@@ -74,30 +79,32 @@ function startPreview(allCards) {
 function showStartMessage() {
   const startMessage = document.createElement("div");
   startMessage.textContent = "START!";
-  startMessage.style.position = "fixed";
+  startMessage.style.position = "absolute";
   startMessage.style.top = "50%";
   startMessage.style.left = "50%";
   startMessage.style.transform = "translate(-50%, -50%)";
-  startMessage.style.fontSize = "3rem";
-  startMessage.style.fontWeight = "700";
-  startMessage.style.color = "#ff4d4d";
-  startMessage.style.zIndex = "100";
+  startMessage.style.fontSize = "4rem";
+  startMessage.style.fontWeight = "bold";
+  startMessage.style.color = "#333";
+  startMessage.style.zIndex = "1000";
   document.body.appendChild(startMessage);
 
-  lockBoard = false;
-  startTimer();
-
   setTimeout(() => {
-    startMessage.remove();
+    document.body.removeChild(startMessage);
+    lockBoard = false;  // 클릭 허용
+    startTimer();       // 타이머 시작
   }, 1000);
 }
 
 function flipCard(card) {
   if (lockBoard || card.classList.contains("flipped")) return;
+
   card.classList.add("flipped");
   flippedCards.push(card);
 
-  if (flippedCards.length === 2) checkMatch();
+  if (flippedCards.length === 2) {
+    checkMatch();
+  }
 }
 
 function checkMatch() {
@@ -119,7 +126,6 @@ function checkMatch() {
 
 function startTimer() {
   clearInterval(countdown);
-  timeLeft = totalTime;
   countdown = setInterval(() => {
     timeLeft--;
     timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
@@ -133,13 +139,8 @@ function startTimer() {
 function endGame() {
   lockBoard = true;
   timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
+  restartBtn.style.display = "inline-block";
 }
-
-startBtn.addEventListener("click", () => {
-  startBtn.style.display = "none";
-  const allCards = document.querySelectorAll(".card");
-  startPreview(allCards);
-});
 
 restartBtn.addEventListener("click", initGame);
 

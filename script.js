@@ -2,17 +2,34 @@ const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
 
-const totalTime = 20;
-let countdown;
-let timeLeft = totalTime;
+let images = [];
 let flippedCards = [];
+let matchedCount = 0;
+let timeLeft = 20;
+let countdown;
+let previewTimer;
 let lockBoard = false;
-let matchedSets = 0;
 
-const images = [];
-for (let i = 1; i <= 8; i++) {
-  images.push(`img/${i}.jpg`);
-  images.push(`img/${i}.jpg`);
+function createBoard() {
+  gameBoard.innerHTML = "";
+  images = [];
+
+  for (let i = 1; i <= 8; i++) {
+    images.push(`img/${i}.jpg`);
+    images.push(`img/${i}.jpg`);
+  }
+  images = shuffle(images);
+
+  images.forEach((src) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      <div class="front"><img src="${src}" alt="card"></div>
+      <div class="back"></div>
+    `;
+    card.addEventListener("click", () => flipCard(card));
+    gameBoard.appendChild(card);
+  });
 }
 
 function shuffle(array) {
@@ -23,66 +40,9 @@ function shuffle(array) {
   return array;
 }
 
-function initGame() {
-  clearInterval(countdown);
-  gameBoard.innerHTML = "";
-  flippedCards = [];
-  lockBoard = true;
-  matchedSets = 0;
-  timeLeft = totalTime;
-  restartBtn.textContent = "🔄 다시 시작";
-  restartBtn.style.display = "inline-block";
-
-  const shuffled = shuffle([...images]);
-
-  shuffled.forEach(src => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.image = src;
-
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="back"><img src="img/back.png" alt="back"></div>
-        <div class="front"><img src="${src}" alt="front"></div>
-      </div>
-    `;
-
-    card.addEventListener("click", () => flipCard(card));
-    gameBoard.appendChild(card);
-  });
-
-  const allCards = document.querySelectorAll(".card");
-
-  setTimeout(() => {
-    allCards.forEach(card => card.classList.add("flipped"));
-    startPreviewCountdown(allCards);
-  }, 100);
-}
-
-function startPreviewCountdown(allCards) {
-  let previewTime = 3;
-  timerDisplay.textContent = `미리보기 ${previewTime}초`;
-
-  const previewInterval = setInterval(() => {
-    previewTime--;
-    if (previewTime > 0) {
-      timerDisplay.textContent = `미리보기 ${previewTime}초`;
-    } else {
-      clearInterval(previewInterval);
-      allCards.forEach(card => card.classList.remove("flipped"));
-      showStartMessage();
-    }
-  }, 1000);
-}
-
-function showStartMessage() {
-  timerDisplay.textContent = "START!";
-  lockBoard = false;
-  startTimer();
-}
-
 function flipCard(card) {
   if (lockBoard || card.classList.contains("flipped")) return;
+
   card.classList.add("flipped");
   flippedCards.push(card);
 
@@ -95,8 +55,11 @@ function checkMatch() {
   lockBoard = true;
   const [card1, card2] = flippedCards;
 
-  if (card1.dataset.image === card2.dataset.image) {
-    matchedSets++;
+  const img1 = card1.querySelector(".front img").src;
+  const img2 = card2.querySelector(".front img").src;
+
+  if (img1 === img2) {
+    matchedCount++;
     flippedCards = [];
     lockBoard = false;
   } else {
@@ -109,13 +72,54 @@ function checkMatch() {
   }
 }
 
-function startTimer() {
-  clearInterval(countdown);
-  timeLeft = totalTime;
+function startGame() {
+  matchedCount = 0;
+  timeLeft = 20;
+  flippedCards = [];
+  lockBoard = true;
+
+  hideAllCards();
+
+  let previewCount = 3;
+  setTimeout(() => {
+    showAllCards();
+    timerDisplay.textContent = `미리보기 ${previewCount}초`;
+
+    previewTimer = setInterval(() => {
+      previewCount--;
+      if (previewCount > 0) {
+        timerDisplay.textContent = `미리보기 ${previewCount}초`;
+      } else {
+        clearInterval(previewTimer);
+        hideAllCards();
+        timerDisplay.textContent = "START!";
+        setTimeout(() => {
+          lockBoard = false;
+          startMainTimer();
+        }, 800);
+      }
+    }, 1000);
+  }, 500);
+}
+
+function showAllCards() {
+  document.querySelectorAll(".card").forEach((card) => {
+    card.classList.add("flipped");
+  });
+}
+
+function hideAllCards() {
+  document.querySelectorAll(".card").forEach((card) => {
+    card.classList.remove("flipped");
+  });
+}
+
+function startMainTimer() {
   countdown = setInterval(() => {
-    timeLeft--;
-    timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
-    if (timeLeft <= 0) {
+    if (timeLeft >= 0) {
+      timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
+      timeLeft--;
+    } else {
       clearInterval(countdown);
       endGame();
     }
@@ -124,9 +128,15 @@ function startTimer() {
 
 function endGame() {
   lockBoard = true;
-  timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
+  timerDisplay.textContent = `시간 초과! ${matchedCount}세트 성공했습니다.`;
 }
 
-restartBtn.addEventListener("click", initGame);
+restartBtn.addEventListener("click", () => {
+  clearInterval(countdown);
+  clearInterval(previewTimer);
+  createBoard();
+  startGame();
+});
 
-initGame();
+createBoard();
+startGame();

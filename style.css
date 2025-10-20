@@ -1,13 +1,12 @@
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
   margin: 0;
   padding: 20px;
-  position: relative;
+  min-height: 100vh;
 }
 
 h1 {
@@ -17,61 +16,37 @@ h1 {
 }
 
 #timer {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 15px 0;
+  font-size: 1.3rem;
+  margin: 10px 0;
   text-align: center;
-}
-
-#startOverlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3rem;
-  font-weight: 700;
-  color: #ff0000;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  display: none;
-  z-index: 10;
-}
-
-#restartBtn {
-  margin-top: 20px;
-  background-color: #0078ff;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  padding: 12px 28px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-#restartBtn:hover {
-  background-color: #005fcc;
-  transform: scale(1.05);
+  min-height: 24px;
 }
 
 .game-board {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 12px;
-  max-width: calc(6 * 100px + 5 * 12px); /* 한 줄 최대 6장 */
+  gap: 10px;
   width: 90%;
-  margin: 20px auto;
+  max-width: 700px;
   perspective: 1000px;
+  margin-top: 20px;
 }
 
 .card {
-  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
+  position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s;
   cursor: pointer;
+}
+
+.card .card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
 }
 
 .card .front,
@@ -82,37 +57,54 @@ h1 {
   border-radius: 10px;
   backface-visibility: hidden;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 
-.card .front img {
+.card .front img,
+.card .back img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .card .back {
-  background-color: #f5f5f5;
-  background-image: url("img/back.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  transform: rotateY(0deg);
+}
+
+.card .front {
   transform: rotateY(180deg);
 }
 
-.card.flipped {
+.card.flipped .card-inner {
   transform: rotateY(180deg);
 }
 
-@media (min-width: 768px) {
-  h1 { font-size: 2.4rem; }
-  #timer { font-size: 1.3rem; }
-  #restartBtn { font-size: 1.1rem; padding: 14px 30px; }
-  .game-board { max-width: calc(6 * 120px + 5 * 12px); gap: 14px; }
+#restartBtn {
+  margin-top: 30px;
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  border: none;
+  background-color: #0078ff;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: background-color 0.2s, transform 0.2s;
 }
 
-@media (max-width: 480px) {
-  h1 { font-size: 1.5rem; }
-  #timer { font-size: 1rem; }
-  .game-board { gap: 8px; }
+#restartBtn:hover {
+  background-color: #005fcc;
+  transform: scale(1.05);
+}
+
+#startOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ff0000;
+  display: none;
+  z-index: 10;
 }

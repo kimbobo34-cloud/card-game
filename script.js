@@ -1,14 +1,7 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
-
-let startOverlay = document.getElementById("startOverlay");
-if (!startOverlay) {
-  startOverlay = document.createElement("div");
-  startOverlay.id = "startOverlay";
-  startOverlay.textContent = "START!";
-  document.body.appendChild(startOverlay);
-}
+const startOverlay = document.getElementById("startOverlay");
 
 let images = [];
 let flippedCards = [];
@@ -50,7 +43,6 @@ function shuffle(array) {
 
 function flipCard(card) {
   if (lockBoard || card.classList.contains("flipped")) return;
-
   card.classList.add("flipped");
   flippedCards.push(card);
 
@@ -80,7 +72,6 @@ function checkMatch() {
 function showAllCards() {
   document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
 }
-
 function hideAllCards() {
   document.querySelectorAll(".card").forEach(card => card.classList.remove("flipped"));
 }
@@ -104,11 +95,10 @@ function startGame() {
     } else {
       clearInterval(previewTimer);
 
-      startOverlay.style.display = "block";
-
+      startOverlay.style.display = "block"; // START 오버레이
       setTimeout(() => {
         startOverlay.style.display = "none";
-        hideAllCards();
+        hideAllCards(); 
         lockBoard = false;
         startMainTimer();
       }, 1000);

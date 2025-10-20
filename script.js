@@ -20,7 +20,7 @@ function createBoard() {
   }
   images = shuffle(images);
 
-  images.forEach((src) => {
+  images.forEach(src => {
     const card = document.createElement("div");
     card.classList.add("card");
     card.innerHTML = `
@@ -72,6 +72,7 @@ function checkMatch() {
   }
 }
 
+// 미리보기 + 게임 시작
 function startGame() {
   matchedCount = 0;
   timeLeft = 20;
@@ -81,39 +82,36 @@ function startGame() {
   hideAllCards();
 
   let previewCount = 3;
-  setTimeout(() => {
-    showAllCards();
-    timerDisplay.textContent = `미리보기 ${previewCount}초`;
+  showAllCards();
+  timerDisplay.textContent = `미리보기 ${previewCount}초`;
 
-    previewTimer = setInterval(() => {
-      previewCount--;
-      if (previewCount > 0) {
-        timerDisplay.textContent = `미리보기 ${previewCount}초`;
-      } else {
-        clearInterval(previewTimer);
-        hideAllCards();
-        timerDisplay.textContent = "START!";
-        setTimeout(() => {
-          lockBoard = false;
-          startMainTimer();
-        }, 800);
-      }
-    }, 1000);
-  }, 500);
+  previewTimer = setInterval(() => {
+    previewCount--;
+    if (previewCount > 0) {
+      timerDisplay.textContent = `미리보기 ${previewCount}초`;
+    } else {
+      clearInterval(previewTimer);
+      hideAllCards();
+      timerDisplay.textContent = "START!";
+      setTimeout(() => {
+        lockBoard = false; // 게임 진행 가능
+        startMainTimer();
+      }, 500);
+    }
+  }, 1000);
 }
 
+// 모든 카드 앞면
 function showAllCards() {
-  document.querySelectorAll(".card").forEach((card) => {
-    card.classList.add("flipped");
-  });
+  document.querySelectorAll(".card").forEach(card => card.classList.add("flipped"));
 }
 
+// 모든 카드 뒷면
 function hideAllCards() {
-  document.querySelectorAll(".card").forEach((card) => {
-    card.classList.remove("flipped");
-  });
+  document.querySelectorAll(".card").forEach(card => card.classList.remove("flipped"));
 }
 
+// 게임 타이머
 function startMainTimer() {
   countdown = setInterval(() => {
     if (timeLeft >= 0) {

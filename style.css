@@ -79,14 +79,11 @@ h1 {
 }
 
 #startBtn {
-  position: fixed;
-  top: 120px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 15px 40px;
-  font-size: 2rem;
+  margin-top: 10px;
+  padding: 10px 25px;
+  font-size: 1.2rem;
   font-weight: 700;
-  border-radius: 30px;
+  border-radius: 20px;
   border: none;
   background-color: #ff4d4d;
   color: #fff;
@@ -114,4 +111,15 @@ h1 {
 #restartBtn:hover {
   background-color: #005fcc;
   transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .game-board {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  #startBtn {
+    font-size: 1rem;
+    padding: 8px 20px;
+  }
 }

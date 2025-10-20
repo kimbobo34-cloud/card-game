@@ -78,8 +78,27 @@ h1 {
   transform: rotateY(180deg);
 }
 
+#startBtn {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 40px;
+  font-size: 2rem;
+  font-weight: 700;
+  border-radius: 30px;
+  border: none;
+  background-color: #ff4d4d;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+}
+
 #restartBtn {
-  margin-top: 30px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 10px 25px;
   font-size: 1rem;
   font-weight: 600;
@@ -95,16 +114,4 @@ h1 {
 #restartBtn:hover {
   background-color: #005fcc;
   transform: scale(1.05);
-}
-
-#startOverlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3rem;
-  font-weight: 700;
-  color: #ff0000;
-  display: none;
-  z-index: 10;
 }

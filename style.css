@@ -4,10 +4,15 @@ body {
   background: #f0f0f0;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 }
 
 #timer {
@@ -18,10 +23,12 @@ h1 {
 
 .game-board {
   display: grid;
+  justify-content: center;
+  align-content: center;
+  height: calc(100vh - 180px);
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 15px;
-  justify-content: center;
-  margin: 20px auto;
+  margin: 0 auto;
   max-width: 1200px;
   padding: 0 10px;
 }
@@ -67,7 +74,7 @@ h1 {
 
 #restartBtn {
   display: none;
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 12px 24px;
   font-size: 18px;
   border: none;
@@ -81,10 +88,26 @@ h1 {
   background: #555;
 }
 
+#startOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 64px;
+  font-weight: bold;
+  color: #333;
+  display: none;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 20px 40px;
+  border-radius: 12px;
+}
+
 @media (max-width: 600px) {
   .game-board {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 10px;
+    height: calc(100vh - 150px);
   }
 
   #timer {
@@ -95,11 +118,16 @@ h1 {
     font-size: 16px;
     padding: 10px 20px;
   }
+
+  #startOverlay {
+    font-size: 48px;
+    padding: 16px 30px;
+  }
 }
 
 @media (min-width: 1600px) {
   .game-board {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     max-width: 1600px;
   }
 

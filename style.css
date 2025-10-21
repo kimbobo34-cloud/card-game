@@ -25,12 +25,31 @@ h1 {
   display: grid;
   justify-content: center;
   align-content: center;
-  height: calc(100vh - 180px);
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  height: calc(100vh - 180px); 
   gap: 15px;
   margin: 0 auto;
   max-width: 1200px;
   padding: 0 10px;
+}
+
+@media (min-width: 901px) {
+  .game-board {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) and (min-width: 601px) {
+  .game-board {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .game-board {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: calc(100vh - 150px);
+  }
 }
 
 .card {
@@ -104,12 +123,6 @@ h1 {
 }
 
 @media (max-width: 600px) {
-  .game-board {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 10px;
-    height: calc(100vh - 150px);
-  }
-
   #timer {
     font-size: 20px;
   }
@@ -122,21 +135,5 @@ h1 {
   #startOverlay {
     font-size: 48px;
     padding: 16px 30px;
-  }
-}
-
-@media (min-width: 1600px) {
-  .game-board {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    max-width: 1600px;
-  }
-
-  #timer {
-    font-size: 28px;
-  }
-
-  #restartBtn {
-    font-size: 20px;
-    padding: 14px 28px;
   }
 }

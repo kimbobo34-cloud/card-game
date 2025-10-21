@@ -1,6 +1,7 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
+const startOverlay = document.getElementById("startOverlay");
 
 const totalTime = 20; 
 let countdown;
@@ -16,20 +17,6 @@ let flippedCards = [];
 let lockBoard = false;
 let matchedSets = 0;
 
-const startOverlay = document.createElement("div");
-startOverlay.id = "startOverlay";
-startOverlay.style.position = "absolute";
-startOverlay.style.top = "50%";
-startOverlay.style.left = "50%";
-startOverlay.style.transform = "translate(-50%, -50%)";
-startOverlay.style.fontSize = "3rem";
-startOverlay.style.fontWeight = "bold";
-startOverlay.style.color = "#333";
-startOverlay.style.zIndex = "100";
-startOverlay.style.display = "none";
-startOverlay.textContent = "START!";
-document.body.appendChild(startOverlay);
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,6 +31,7 @@ function initGame() {
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
+  timerDisplay.textContent = "미리보기 3초";
   restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
@@ -65,33 +53,32 @@ function initGame() {
   });
 
   const allCards = document.querySelectorAll(".card");
+  let previewCount = 3;
 
-  let previewTime = 3;
-  timerDisplay.textContent = `미리보기 ${previewTime}초`;
-  
   const previewInterval = setInterval(() => {
-    previewTime--;
-    if (previewTime > 0) {
-      timerDisplay.textContent = `미리보기 ${previewTime}초`;
-    } else {
+    timerDisplay.textContent = `미리보기 ${previewCount}초`;
+    previewCount--;
+    if (previewCount < 0) {
       clearInterval(previewInterval);
-      allCards.forEach(card => card.classList.remove("flipped"));
-      showStartOverlay();
+
+      allCards.forEach(card => card.classList.add("flipped"));
+
+      setTimeout(() => {
+        allCards.forEach(card => card.classList.remove("flipped"));
+        showStartMessage();
+      }, 3000);
     }
   }, 1000);
-
-  setTimeout(() => {
-    allCards.forEach(card => card.classList.add("flipped"));
-  }, 100);
 }
 
-function showStartOverlay() {
+function showStartMessage() {
+  timerDisplay.textContent = "";
   startOverlay.style.display = "block";
-  lockBoard = false;
-  startTimer();
 
   setTimeout(() => {
     startOverlay.style.display = "none";
+    lockBoard = false;
+    startTimer();
   }, 1000);
 }
 

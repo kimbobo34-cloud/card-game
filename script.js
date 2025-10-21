@@ -122,7 +122,7 @@ function showStartOverlay() {
 }
 
 function showStartMessage() {
-  timerDisplay.textContent = "START!";
+  timerDisplay.textContent = `남은 시간: ${timeLeft}초`;
   lockBoard = false;
   startTimer();      
 }

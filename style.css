@@ -4,7 +4,6 @@ body {
   background: #f0f0f0;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
 }
 
 h1 {
@@ -19,12 +18,12 @@ h1 {
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
   justify-content: center;
   margin: 20px auto;
-  width: 90vw;
-  max-width: 900px;
+  max-width: 1200px;
+  padding: 0 10px;
 }
 
 .card {
@@ -82,18 +81,58 @@ h1 {
   background: #555;
 }
 
+/* 모바일 */
 @media (max-width: 600px) {
   .game-board {
-    grid-template-columns: repeat(3, 1fr);
-    width: 95vw;
-    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  #timer {
+    font-size: 20px;
+  }
+
+  #restartBtn {
+    font-size: 16px;
+    padding: 10px 20px;
   }
 }
 
-@media (min-width: 1200px) {
+/* 큰 화면 */
+@media (min-width: 1600px) {
   .game-board {
-    grid-template-columns: repeat(6, 1fr);
-    max-width: 1100px;
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1600px;
   }
+
+  #timer {
+    font-size: 28px;
+  }
+
+  #restartBtn {
+    font-size: 20px;
+    padding: 14px 28px;
+  }
+}
+
+#startOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  font-size: clamp(60px, 14vw, 180px);
+  font-weight: 800;
+  color: rgba(0,0,0,0.9);
+  letter-spacing: 4px;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+  animation: startPop 0.9s ease-out forwards;
+}
+
+@keyframes startPop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  25%  { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.12); }
 }

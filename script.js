@@ -1,10 +1,14 @@
 const gameBoard = document.getElementById("gameBoard");
 const timerDisplay = document.getElementById("timer");
 const restartBtn = document.getElementById("restartBtn");
-const startOverlay = document.getElementById("startOverlay");
 
-const totalTime = 20; 
-let countdown;
+const totalTime = 20;
+const PREVIEW_SECONDS = 3;
+const GRID_COLS = 4;
+const GRID_ROWS = 4;
+
+let countdown;          
+let previewInterval;    
 let timeLeft = totalTime;
 
 const images = [];
@@ -25,13 +29,40 @@ function shuffle(array) {
   return array;
 }
 
+function fitBoardToViewport() {
+  const cs = getComputedStyle(gameBoard);
+  const gap = parseFloat(cs.gap) || 0;
+  const padH = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+  const marV = (parseFloat(cs.marginTop) || 0) + (parseFloat(cs.marginBottom) || 0);
+  const maxW = parseFloat(cs.maxWidth) || Infinity;
+
+  const titleH = (document.querySelector('h1')?.offsetHeight || 0);
+  const timerH = (timerDisplay?.offsetHeight || 0);
+  const restartH = (restartBtn.style.display !== "none") ? (restartBtn.offsetHeight + 16) : 0;
+
+  const availableHeight = window.innerHeight - titleH - timerH - restartH - marV - 20;
+  const availableWidth  = Math.min(window.innerWidth, isFinite(maxW) ? maxW : window.innerWidth) - padH;
+
+  const sizeByWidth  = Math.floor((availableWidth  - gap * (GRID_COLS - 1)) / GRID_COLS);
+  const sizeByHeight = Math.floor((availableHeight - gap * (GRID_ROWS - 1)) / GRID_ROWS);
+
+  let size = Math.min(sizeByWidth, sizeByHeight);
+  if (!isFinite(size) || size <= 0) size = 60;
+  size = Math.max(40, size - 1);
+
+  gameBoard.style.gridTemplateColumns = `repeat(${GRID_COLS}, ${size}px)`;
+}
+
 function initGame() {
+  clearInterval(countdown);
+  clearInterval(previewInterval);
+
   gameBoard.innerHTML = "";
   flippedCards = [];
   lockBoard = true;
   matchedSets = 0;
   timeLeft = totalTime;
-  timerDisplay.textContent = "미리보기 3초";
+  timerDisplay.textContent = `미리보기 ${PREVIEW_SECONDS}초`;
   restartBtn.style.display = "none";
 
   const shuffled = shuffle([...images]);
@@ -52,34 +83,48 @@ function initGame() {
     gameBoard.appendChild(card);
   });
 
-  const allCards = document.querySelectorAll(".card");
-  let previewCount = 3;
+  fitBoardToViewport();
 
-  const previewInterval = setInterval(() => {
-    timerDisplay.textContent = `미리보기 ${previewCount}초`;
-    previewCount--;
-    if (previewCount < 0) {
+  const allCards = document.querySelectorAll(".card");
+  setTimeout(() => {
+    allCards.forEach(card => card.classList.add("flipped"));
+    startPreviewCountdown(allCards);
+  }, 100);
+}
+
+function startPreviewCountdown(allCards) {
+  let remain = PREVIEW_SECONDS; // 3
+  timerDisplay.textContent = `미리보기 ${remain}초`;
+
+  previewInterval = setInterval(() => {
+    remain--;
+    if (remain > 0) {
+      timerDisplay.textContent = `미리보기 ${remain}초`; // 2, 1
+    } else {
       clearInterval(previewInterval);
 
-      allCards.forEach(card => card.classList.add("flipped"));
-
-      setTimeout(() => {
-        allCards.forEach(card => card.classList.remove("flipped"));
-        showStartMessage();
-      }, 3000);
+      allCards.forEach(card => card.classList.remove("flipped"));
+      showStartOverlay();
     }
   }, 1000);
 }
 
-function showStartMessage() {
-  timerDisplay.textContent = "";
-  startOverlay.style.display = "block";
+function showStartOverlay() {
+  const overlay = document.createElement("div");
+  overlay.id = "startOverlay";
+  overlay.textContent = "START";
+  document.body.appendChild(overlay);
 
-  setTimeout(() => {
-    startOverlay.style.display = "none";
-    lockBoard = false;
-    startTimer();
-  }, 1000);
+  overlay.addEventListener("animationend", () => {
+    overlay.remove();
+    showStartMessage();
+  }, { once: true });
+}
+
+function showStartMessage() {
+  timerDisplay.textContent = "START!";
+  lockBoard = false;
+  startTimer();      
 }
 
 function flipCard(card) {
@@ -126,8 +171,10 @@ function endGame() {
   lockBoard = true;
   timerDisplay.textContent = `시간 종료! ${matchedSets}세트 성공!`;
   restartBtn.style.display = "inline-block";
+  fitBoardToViewport();
 }
 
 restartBtn.addEventListener("click", initGame);
+window.addEventListener("resize", fitBoardToViewport);
 
 initGame();
